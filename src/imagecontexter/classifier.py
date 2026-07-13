@@ -19,6 +19,8 @@ from .config import Category
 logger = logging.getLogger(__name__)
 
 # Image file extensions we recognise (case-insensitive check at call site).
+# Supported formats mirror Pillow's native capabilities.
+# GIF support is included but only the first frame is analyzed.
 IMAGE_EXTENSIONS: frozenset[str] = frozenset(
     {".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif", ".webp", ".gif"}
 )
