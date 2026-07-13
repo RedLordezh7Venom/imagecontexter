@@ -130,6 +130,8 @@ class ImageClassifier:
 
     # ---- internals --------------------------------------------------------
 
+    # Prompt engineering: structured descriptions with explicit output constraints
+    # significantly improve classification accuracy on small VLMs.
     @staticmethod
     def _build_prompt(categories: list[Category]) -> str:
         """Construct a classification prompt for the VLM."""
