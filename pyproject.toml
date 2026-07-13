@@ -5,5 +5,18 @@ build-backend = "hatchling.build"
 [project]
 name = "imagecontexter"
 version = "0.1.0"
-description = "Classify images into category folders using a local VLM"
+description = "Classify images into category folders using a local VLM (Moondream). 100% free, runs offline."
+readme = "README.md"
 requires-python = ">=3.10"
+license = { text = "MIT" }
+
+dependencies = [
+    "moondream",
+    "Pillow",
+    "PyYAML",
+    "tqdm",
+    "click",
+]
+
+[project.scripts]
+imagecontexter = "imagecontexter.cli:main"
