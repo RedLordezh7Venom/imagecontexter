@@ -64,6 +64,8 @@ def _sanitize_dirname(name: str) -> str:
 # Report I/O
 # ---------------------------------------------------------------------------
 
+# CSV fields are written with UTF-8 encoding for Windows compatibility
+# with non-ASCII characters in file paths and category names.
 _CSV_FIELDS = ["image_path", "category", "description", "raw_answer"]
 
 
