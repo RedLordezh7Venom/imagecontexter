@@ -8,3 +8,8 @@ build/
 *.egg
 .venv/
 venv/
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
