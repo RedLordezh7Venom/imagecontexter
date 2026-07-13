@@ -13,3 +13,9 @@ venv/
 Thumbs.db
 desktop.ini
 ehthumbs.db
+# Model weights (downloaded at runtime)
+*.bin
+*.safetensors
+*.onnx
+*.gguf
+models/
