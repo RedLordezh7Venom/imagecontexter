@@ -36,7 +36,8 @@ def organize_file(
     src = Path(result.image_path)
     dest = category_dir / src.name
 
-    # Avoid overwriting files with the same name.
+    # Collision handling: append _1, _2, etc. to avoid overwriting.
+    # This is important when multiple source dirs have same-named files.
     if dest.exists():
         stem, suffix = src.stem, src.suffix
         counter = 1
