@@ -33,5 +33,8 @@ categories:
   - name: art
     description: "Digital art, paintings, illustrations, graphic design, drawings, sketches"
 
+  - name: architecture
+    description: "Buildings, houses, interiors, cityscapes, urban photography, real estate photos"
+
   - name: other
     description: "Anything that does not clearly fit into the categories above"
