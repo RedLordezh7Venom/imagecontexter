@@ -1,0 +1,37 @@
+# ImageContexter — Category Definition File
+# ==========================================
+#
+# Each category needs:
+#   - name:        A short label (used as the folder name)
+#   - description: A plain-English description to help the VLM classify accurately.
+#                  The more specific your description, the better the results.
+#
+# Tips:
+#   - Add an "other" category as a catch-all for images that don't fit anywhere.
+#   - Keep category names short and filesystem-friendly (no special characters).
+#   - Descriptions should mention concrete visual cues the model can look for.
+
+categories:
+  - name: landscapes
+    description: "Outdoor nature scenes — mountains, beaches, forests, sunsets, fields, oceans, sky photography"
+
+  - name: people
+    description: "Photos containing people — portraits, selfies, group photos, candid shots of humans"
+
+  - name: animals
+    description: "Photos of animals or pets — dogs, cats, birds, wildlife, insects"
+
+  - name: food
+    description: "Food, dishes, meals, drinks, cooking, restaurants, close-ups of plates"
+
+  - name: documents
+    description: "Screenshots, scanned documents, text-heavy images, receipts, forms, whiteboards"
+
+  - name: memes
+    description: "Internet memes, image macros, funny captioned images, reaction images"
+
+  - name: art
+    description: "Digital art, paintings, illustrations, graphic design, drawings, sketches"
+
+  - name: other
+    description: "Anything that does not clearly fit into the categories above"
