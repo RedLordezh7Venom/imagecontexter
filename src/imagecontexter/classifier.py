@@ -208,3 +208,5 @@ def collect_images(directory: Path, *, recursive: bool = False) -> list[Path]:
         for f in directory.glob(pattern)
         if f.is_file() and f.suffix.lower() in IMAGE_EXTENSIONS
     )
+
+# End of classifier module
