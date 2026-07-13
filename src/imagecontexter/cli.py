@@ -209,6 +209,8 @@ def classify(
 # summary helper
 # ---------------------------------------------------------------------------
 
+# Summary visualization: uses block characters for a quick visual breakdown
+# of how images were distributed across categories.
 def _print_summary(
     results: list[ClassificationResult],
     errors: list[tuple[str, str]],
