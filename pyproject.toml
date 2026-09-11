@@ -4,14 +4,15 @@ build-backend = "hatchling.build"
 
 [project]
 name = "imagecontexter"
-version = "0.1.0"
-description = "Classify images into category folders using a local VLM (Moondream). 100% free, runs offline."
+version = "0.2.0"
+description = "Classify images into categories using SmolVLM GGUF on GPU. Fast, offline, zero cost."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 
 dependencies = [
-    "moondream",
+    "llama-cpp-python",
+    "huggingface-hub",
     "Pillow",
     "PyYAML",
     "tqdm",

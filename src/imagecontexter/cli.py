@@ -1,10 +1,13 @@
 """Command-line interface for ImageContexter.
 
+Classifies images into: anime, game, movie, meme, coding using SmolVLM GGUF on GPU.
+
 Usage::
 
-    imagecontexter classify ./photos --categories categories.yaml
-    imagecontexter classify ./photos -c cats.yaml --dry-run
-    imagecontexter classify ./photos -c cats.yaml --model-size 0.5b --mode move
+    imagecontexter classify ./photos
+    imagecontexter classify ./photos --mode move
+    imagecontexter classify ./photos --dry-run
+    imagecontexter classify ./photos -c custom_categories.yaml
 """
 
 from __future__ import annotations
@@ -17,7 +20,7 @@ import click
 from tqdm import tqdm
 
 from .classifier import ClassificationResult, ImageClassifier, collect_images
-from .config import ClassifyConfig
+from .config import DEFAULT_CATEGORIES, ClassifyConfig
 from .organizer import (
     load_existing_results,
     organize_file,
@@ -33,7 +36,7 @@ from .organizer import (
 @click.group()
 @click.version_option(package_name="imagecontexter")
 def main() -> None:
-    """ImageContexter — classify images into category folders using a local VLM."""
+    """ImageContexter — classify images into categories using SmolVLM GGUF on GPU."""
 
 
 # ---------------------------------------------------------------------------
@@ -47,15 +50,16 @@ def main() -> None:
 )
 @click.option(
     "--categories", "-c",
-    required=True,
+    required=False,
+    default=None,
     type=click.Path(exists=True, dir_okay=False, path_type=Path),
-    help="Path to a categories YAML file.",
+    help="Optional path to a custom categories YAML file. Defaults to hardcoded categories.",
 )
 @click.option(
     "--output", "-o",
     type=click.Path(path_type=Path),
     default=None,
-    help="Output directory.  [default: <input_dir>_classified]",
+    help="Output directory. [default: <input_dir>_classified]",
 )
 @click.option(
     "--mode",
@@ -70,17 +74,16 @@ def main() -> None:
     help="Show what would happen without touching any files.",
 )
 @click.option(
-    "--model-size",
-    type=click.Choice(["0.5b", "2b"], case_sensitive=False),
-    default="2b",
+    "--gpu-layers",
+    type=int,
+    default=-1,
     show_default=True,
-    help="Moondream model size.  0.5b = fast / low RAM,  2b = more accurate.",
+    help="Number of layers to offload to GPU (-1 = all layers on GPU).",
 )
 @click.option(
     "--describe",
     is_flag=True,
-    help="Run an extra captioning pass per image (slower, but saves a "
-         "description in the report).",
+    help="Generate concise image description alongside classification.",
 )
 @click.option(
     "--recursive", "-r",
@@ -97,25 +100,28 @@ def main() -> None:
 @click.option(
     "--resume",
     is_flag=True,
-    help="Skip images that appear in an existing report (resume an "
-         "interrupted run).",
+    help="Skip images that appear in an existing report.",
 )
 def classify(
     input_dir: Path,
-    categories: Path,
+    categories: Path | None,
     output: Path | None,
     mode: str,
     dry_run: bool,
-    model_size: str,
+    gpu_layers: int,
     describe: bool,
     recursive: bool,
     report: str,
     resume: bool,
 ) -> None:
-    """Classify images in INPUT_DIR into category sub-folders."""
+    """Classify images in INPUT_DIR into category sub-folders (anime, game, movie, meme, coding)."""
 
     # -- load categories ----------------------------------------------------
-    config = ClassifyConfig.from_yaml(categories)
+    if categories is not None:
+        config = ClassifyConfig.from_yaml(categories)
+    else:
+        config = ClassifyConfig.default()
+
     cat_names = ", ".join(c.name for c in config.categories)
     click.echo(f"📋 Categories: {cat_names}")
 
@@ -146,22 +152,13 @@ def classify(
     # -- load model ---------------------------------------------------------
     classifier: ImageClassifier | None = None
     if not dry_run:
-        dl_size = "~0.5 GB" if model_size == "0.5b" else "~1.5 GB"
-        click.echo(
-            f"🧠 Loading Moondream {model_size} model "
-            f"(first run will download {dl_size}) …"
-        )
+        click.echo("⚡ Loading SmolVLM-256M-Instruct GGUF on GPU for ultra-fast inference...")
         try:
-            classifier = ImageClassifier(model_size=model_size)
+            classifier = ImageClassifier(n_gpu_layers=gpu_layers)
         except Exception as exc:
             click.secho(f"❌ Failed to load model: {exc}", fg="red", err=True)
-            click.echo(
-                "💡 Try --model-size 0.5b for lower memory usage, or check "
-                "that you have enough free RAM / VRAM.",
-                err=True,
-            )
             sys.exit(1)
-        click.secho("✅ Model loaded!", fg="green")
+        click.secho("✅ SmolVLM GPU model ready!", fg="green")
 
     # -- classify -----------------------------------------------------------
     results: list[ClassificationResult] = []
@@ -209,8 +206,6 @@ def classify(
 # summary helper
 # ---------------------------------------------------------------------------
 
-# Summary visualization: uses block characters for a quick visual breakdown
-# of how images were distributed across categories.
 def _print_summary(
     results: list[ClassificationResult],
     errors: list[tuple[str, str]],

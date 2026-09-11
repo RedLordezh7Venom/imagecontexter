@@ -1,40 +1,22 @@
 # ImageContexter — Category Definition File
 # ==========================================
+# Note: By default, ImageContexter has hardcoded categories:
+#   anime, game, movie, meme, coding
 #
-# Each category needs:
-#   - name:        A short label (used as the folder name)
-#   - description: A plain-English description to help the VLM classify accurately.
-#                  The more specific your description, the better the results.
-#
-# Tips:
-#   - Add an "other" category as a catch-all for images that don't fit anywhere.
-#   - Keep category names short and filesystem-friendly (no special characters).
-#   - Descriptions should mention concrete visual cues the model can look for.
+# You only need this file if you want to override or customize the categories!
 
 categories:
-  - name: landscapes
-    description: "Outdoor nature scenes — mountains, beaches, forests, sunsets, fields, oceans, sky photography"
+  - name: anime
+    description: "Anime, manga illustrations, animated Japanese characters, 2D anime art"
 
-  - name: people
-    description: "Photos containing people — portraits, selfies, group photos, candid shots of humans"
+  - name: game
+    description: "Video games, gameplay screenshots, video game characters, gaming interfaces, 3D game engines"
 
-  - name: animals
-    description: "Photos of animals or pets — dogs, cats, birds, wildlife, insects"
+  - name: movie
+    description: "Live-action movies, TV series, cinematic scenes, film photography, real actors and actresses"
 
-  - name: food
-    description: "Food, dishes, meals, drinks, cooking, restaurants, close-ups of plates"
+  - name: meme
+    description: "Internet memes, image macros, funny captioned reaction images, humorous social media posts"
 
-  - name: documents
-    description: "Screenshots, scanned documents, text-heavy images, receipts, forms, whiteboards"
-
-  - name: memes
-    description: "Internet memes, image macros, funny captioned images, reaction images"
-
-  - name: art
-    description: "Digital art, paintings, illustrations, graphic design, drawings, sketches"
-
-  - name: architecture
-    description: "Buildings, houses, interiors, cityscapes, urban photography, real estate photos"
-
-  - name: other
-    description: "Anything that does not clearly fit into the categories above"
+  - name: coding
+    description: "Code editors, IDE screenshots, terminal/command line text, programming languages, syntax and code snippets"

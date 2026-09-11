@@ -1,8 +1,13 @@
-"""Category configuration loader.
+"""Category configuration and defaults.
 
-Reads a YAML file defining the classification categories and their
-descriptions. The descriptions are fed to the VLM as context so it
-understands what each category means.
+Contains the default hardcoded classification categories:
+  - anime: Anime, manga, animated Japanese art, anime characters
+  - game: Video games, gaming screenshots, gameplay, game UI, 3D game models
+  - movie: Live-action movies, TV shows, film stills, real actors, cinematic scenes
+  - meme: Internet memes, humorous captioned photos, social media jokes, shitposts
+  - coding: Code snippets, IDE/editor screenshots, terminal output, programming syntax
+
+Users can also optionally load custom categories from a YAML file.
 """
 
 from __future__ import annotations
@@ -27,22 +32,41 @@ class Category:
         return self.name
 
 
+# Default hardcoded categories as requested
+DEFAULT_CATEGORIES: list[Category] = [
+    Category(
+        name="anime",
+        description="Anime, manga illustrations, animated Japanese characters, 2D anime art and styles",
+    ),
+    Category(
+        name="game",
+        description="Video games, gameplay screenshots, video game characters, gaming interfaces, 3D game engines",
+    ),
+    Category(
+        name="movie",
+        description="Live-action movies, TV series, cinematic scenes, film photography, real actors and actresses",
+    ),
+    Category(
+        name="meme",
+        description="Internet memes, image macros, funny captioned reaction images, humorous social media posts",
+    ),
+    Category(
+        name="coding",
+        description="Code editors, IDE screenshots, terminal/command line text, programming languages, syntax and code snippets",
+    ),
+]
+
+
 @dataclass
 class ClassifyConfig:
-    """Complete classification configuration parsed from a YAML file.
-
-    Expected YAML format::
-
-        categories:
-          - name: landscapes
-            description: "Outdoor nature scenes ..."
-          - name: people
-            description: "Photos with humans ..."
-    """
+    """Classification configuration."""
 
     categories: list[Category]
 
-    # --- factory ----------------------------------------------------------
+    @classmethod
+    def default(cls) -> ClassifyConfig:
+        """Return the default hardcoded classification configuration."""
+        return cls(categories=list(DEFAULT_CATEGORIES))
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> ClassifyConfig:
@@ -67,7 +91,6 @@ class ClassifyConfig:
         categories: list[Category] = []
         for entry in raw_cats:
             if isinstance(entry, str):
-                # Allow shorthand: just a name
                 categories.append(Category(name=entry))
             elif isinstance(entry, dict):
                 categories.append(
@@ -80,8 +103,6 @@ class ClassifyConfig:
                 raise ValueError(f"Invalid category entry: {entry!r}")
 
         return cls(categories=categories)
-
-    # --- helpers ----------------------------------------------------------
 
     def category_names(self) -> list[str]:
         """Return a list of all category names."""

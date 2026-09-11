@@ -1,137 +1,62 @@
 # ImageContexter
 
-> Classify images into category folders using a **local** Vision Language Model — 100% free, runs entirely offline on your machine.
+> Fast, GPU-accelerated local image categorizer using [SmolVLM-256M-Instruct-GGUF](https://huggingface.co/ggml-org/SmolVLM-256M-Instruct-GGUF). 100% free, runs completely offline on your NVIDIA GPU.
 
-ImageContexter uses [Moondream](https://moondream.ai/), a lightweight VLM that runs on consumer hardware (even CPU-only), to automatically sort your images into user-defined categories.
+## Hardcoded Default Categories
+
+ImageContexter automatically classifies images into 5 categories:
+
+1. **`anime`** — Anime, manga illustrations, animated characters, 2D art
+2. **`game`** — Video games, gameplay screenshots, 3D graphics, gaming UI
+3. **`movie`** — Live-action films, TV series, cinematic stills, real actors
+4. **`meme`** — Memes, reaction images, humorous captioned posts
+5. **`coding`** — IDEs, code editors, terminal output, programming syntax
 
 ## Features
 
-- **Zero cost** — everything runs locally, no API keys needed
-- **Simple YAML config** — define your categories with plain-English descriptions
-- **Two model sizes** — 0.5B (fast, ~1 GB) or 2B (accurate, ~1.5 GB)
-- **Copy or Move** — non-destructive by default (copies), with move option
-- **Dry-run mode** — preview classifications before committing
-- **Resume support** — interrupt and restart without re-processing
-- **Detailed reports** — CSV and JSON output with every classification
+- **Blazing Fast GPU Inference** — Powered by `llama-cpp-python` with full CUDA offloading (`~0.5s - 0.9s` per image on RTX 3050).
+- **Ultra-lightweight VLM** — SmolVLM 256M Q8_0 GGUF + mmproj (~278 MB total).
+- **Zero Config Required** — Categories are hardcoded in the classifier; simply point to an image directory.
+- **Copy or Move Modes** — Organizes images cleanly into category folders.
+- **Dry-run Mode** — Preview without altering any files.
+- **Reports** — Automatic CSV and JSON output with classifications.
 
 ## Quick Start
 
-### 1. Install
-
 ```bash
-cd imagecontexter
-pip install -e .
-```
+# Basic usage (classifies into anime, game, movie, meme, coding)
+imagecontexter classify ./my-photos
 
-> **First run** will download the Moondream model (~1.5 GB for 2B, ~0.5 GB for 0.5B). This only happens once.
+# Dry run preview (does not touch files)
+imagecontexter classify ./my-photos --dry-run
 
-### 2. Define Your Categories
+# Move files instead of copying (saves disk space)
+imagecontexter classify ./my-photos --mode move
 
-Create a `categories.yaml` (or copy `categories.example.yaml`):
+# Custom output directory
+imagecontexter classify ./my-photos -o ./sorted
 
-```yaml
-categories:
-  - name: landscapes
-    description: "Nature scenes — mountains, beaches, forests, sunsets"
+# Recursive subfolder scan
+imagecontexter classify ./my-photos -r
 
-  - name: people
-    description: "Photos with people — portraits, selfies, group shots"
-
-  - name: screenshots
-    description: "Screen captures, UI mockups, text-heavy images"
-
-  - name: other
-    description: "Anything that doesn't fit above"
-```
-
-> **Tip:** The more specific your descriptions, the better the classification accuracy.
-
-### 3. Classify
-
-```bash
-# Basic usage — copies images into ./my-photos_classified/<category>/
-imagecontexter classify ./my-photos -c categories.yaml
-
-# Preview first (no files touched)
-imagecontexter classify ./my-photos -c categories.yaml --dry-run
-
-# Use the smaller, faster model
-imagecontexter classify ./my-photos -c categories.yaml --model-size 0.5b
-
-# Move instead of copy (saves disk space)
-imagecontexter classify ./my-photos -c categories.yaml --mode move
-
-# Scan subdirectories too
-imagecontexter classify ./my-photos -c categories.yaml --recursive
-
-# Custom output location
-imagecontexter classify ./my-photos -c categories.yaml -o ./sorted-photos
-
-# Generate captions too (saved in the report)
-imagecontexter classify ./my-photos -c categories.yaml --describe
-
-# Resume an interrupted run
-imagecontexter classify ./my-photos -c categories.yaml --resume
-```
-
-## Output Structure
-
-```
-my-photos_classified/
-├── landscapes/
-│   ├── sunset_beach.jpg
-│   └── mountain_view.png
-├── people/
-│   ├── family_dinner.jpg
-│   └── selfie.png
-├── screenshots/
-│   └── error_msg.png
-├── other/
-│   └── abstract_pattern.jpg
-├── report.csv
-└── report.json
-```
-
-## Hardware Requirements
-
-| Model  | RAM / VRAM | Speed (per image) | Accuracy  |
-| ------ | ---------- | ------------------ | --------- |
-| **0.5B** | ~1 GB    | ~2-5s (GPU), ~10-20s (CPU) | Good      |
-| **2B**   | ~3 GB    | ~3-8s (GPU), ~15-40s (CPU) | Very Good |
-
-- **GPU recommended** for large batches but CPU works fine
-- Supports NVIDIA (CUDA) and Apple Silicon (MPS)
-
-## Categories YAML Reference
-
-```yaml
-categories:
-  # Full format (recommended)
-  - name: category_name
-    description: "Detailed description of what belongs here"
-
-  # Shorthand (name only — less accurate)
-  - simple_category
+# (Optional) Override with custom categories YAML
+imagecontexter classify ./my-photos -c custom.yaml
 ```
 
 ## CLI Reference
 
 ```
-imagecontexter classify INPUT_DIR [OPTIONS]
+imagecontexter classify [OPTIONS] INPUT_DIR
 
 Options:
-  -c, --categories PATH    Path to categories YAML file  [required]
-  -o, --output PATH        Output directory  [default: <input>_classified]
-  --mode [copy|move]       File operation mode  [default: copy]
-  --dry-run                Preview without touching files
-  --model-size [0.5b|2b]   Moondream model size  [default: 2b]
-  --describe               Generate captions (slower, saved in report)
-  -r, --recursive          Scan input directory recursively
-  --report [csv|json|both] Report format  [default: both]
-  --resume                 Skip already-classified images
-  --help                   Show this message and exit
+  -c, --categories FILE     Optional path to a custom categories YAML file.
+  -o, --output PATH         Output directory [default: <input_dir>_classified].
+  --mode [copy|move]        Copy or move images into category folders.
+  --dry-run                 Show classification without touching any files.
+  --gpu-layers INTEGER      Number of layers to offload to GPU (-1 = all).
+  --describe                Generate concise image description in report.
+  -r, --recursive           Scan input directory recursively.
+  --report [csv|json|both]  Report format written to output directory.
+  --resume                  Skip images that appear in existing report.
+  --help                    Show this message and exit.
 ```
-
-## License
-
-MIT
