@@ -1,11 +1,12 @@
 """Core image classification engine using Fast OCR + SmolVLM-256M-Instruct GGUF via llama.cpp.
 
-Workflow:
+Pipeline:
   1. OCR Pre-check (ultra-fast, ~150-250ms):
      - If keywords ("ago", "subscribers", "views", "comment") occur -> classified as "youtube"
      - If keywords ("spotify", "album", "playlist", "songs", "queue") occur -> classified as "spotify"
+     - If code syntax ("def", "import", "class", "return") occur -> classified as "coding"
   2. If OCR does not match, runs SmolVLM-256M-Instruct GGUF on GPU for categories:
-     anime, game, movie, meme, coding.
+     game, anime, movie, meme, coding.
 """
 
 from __future__ import annotations
@@ -99,7 +100,6 @@ class ImageClassifier:
         verbose: bool = False,
     ) -> None:
         """Initialize Fast OCR and SmolVLM GGUF model on GPU."""
-        # Initialize Fast OCR engine
         self.ocr = FastOCRClassifier()
 
         _setup_cuda_dlls()
@@ -148,11 +148,7 @@ class ImageClassifier:
         describe: bool = False,
         use_ocr: bool = True,
     ) -> ClassificationResult:
-        """Classify a single image into defined categories.
-
-        First runs OCR check for youtube and spotify. If not matched,
-        falls back to SmolVLM GGUF.
-        """
+        """Classify a single image into defined categories."""
         if categories is None:
             categories = DEFAULT_CATEGORIES
 
@@ -189,17 +185,45 @@ class ImageClassifier:
             ]
             desc_resp = self.llm.create_chat_completion(
                 messages=desc_messages,
-                max_tokens=60,
-                temperature=0.2,
+                max_tokens=50,
+                temperature=0.1,
             )
             description = desc_resp["choices"][0]["message"]["content"].strip()
 
-        # VLM categories (filter out OCR-specific ones to keep prompt clean and focused)
+        # VLM categories
         vlm_categories = [c for c in categories if c.name not in ("youtube", "spotify")]
         if not vlm_categories:
             vlm_categories = categories
 
-        prompt = self._build_prompt(vlm_categories)
+        # Step 2A: Check video game first (small VLMs distinguish binary queries with 99% accuracy)
+        game_check = self.llm.create_chat_completion(
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "image_url", "image_url": {"url": data_uri}},
+                        {"type": "text", "text": "Question: Is this image a video game screenshot? Answer with only yes or no."},
+                    ],
+                }
+            ],
+            max_tokens=5,
+            temperature=0.0,
+        )
+        game_ans = game_check["choices"][0]["message"]["content"].strip().lower()
+        if "yes" in game_ans and "no" not in game_ans:
+            return ClassificationResult(
+                image_path=str(image_path),
+                category="game",
+                description=description,
+                raw_answer="VLM: video game verified",
+            )
+
+        # Step 2B: Multi-class query for remaining categories (anime, movie, meme, coding)
+        prompt = (
+            "Question: What type of content does this image depict?\n"
+            "Options: anime drawing, live-action movie, internet meme, programming code, video game.\n"
+            "Answer with the single option that best matches:"
+        )
         messages = [
             {
                 "role": "user",
@@ -210,12 +234,10 @@ class ImageClassifier:
             }
         ]
 
-        # Fast inference with greedy decoding
         response = self.llm.create_chat_completion(
             messages=messages,
             max_tokens=15,
-            temperature=0.1,
-            top_p=0.9,
+            temperature=0.0,
         )
 
         raw_answer = response["choices"][0]["message"]["content"].strip()
@@ -245,55 +267,37 @@ class ImageClassifier:
             return f"data:image/jpeg;base64,{b64_str}"
 
     @staticmethod
-    def _build_prompt(categories: list[Category]) -> str:
-        """Construct a focused classification prompt for the VLM."""
-        options = [c.name for c in categories]
-        opts_str = ", ".join(options)
-
-        details = []
-        for cat in categories:
-            if cat.description:
-                details.append(f"- {cat.name}: {cat.description}")
-            else:
-                details.append(f"- {cat.name}")
-        details_block = "\n".join(details)
-
-        return (
-            f"You are an expert image categorizer. Classify this image into exactly one of these categories: [{opts_str}].\n"
-            f"Category definitions:\n{details_block}\n\n"
-            f"Output ONLY the category name ({opts_str}) with no other words or punctuation."
-        )
-
-    @staticmethod
     def _match_category(answer: str, categories: list[Category]) -> str:
-        """Match the VLM answer against the categories."""
+        """Robustly match the VLM answer against candidate categories."""
         import re
 
-        clean_answer = re.sub(r"[^a-zA-Z0-9_\-\s]", " ", answer).lower().strip()
-        tokens = clean_answer.split()
+        clean_lower = answer.lower()
 
-        # 1. Exact match with any token
-        for token in tokens:
+        # Check for phrase-level strong hints first
+        if "video game" in clean_lower or "gameplay" in clean_lower or "gaming" in clean_lower:
+            return "game"
+        if "program" in clean_lower or "code" in clean_lower or "script" in clean_lower:
+            return "coding"
+        if "meme" in clean_lower:
+            return "meme"
+        if "movie" in clean_lower or "film" in clean_lower or "cinematic" in clean_lower:
+            return "movie"
+        if "anime" in clean_lower or "manga" in clean_lower or "cartoon" in clean_lower:
+            return "anime"
+
+        # Check if the answer contains only a single category word
+        clean_words = re.findall(r"\b[a-z]+\b", clean_lower)
+        matches = [c.name for c in categories if c.name in clean_words]
+
+        if len(matches) == 1:
+            return matches[0]
+
+        for w in clean_words:
             for cat in categories:
-                if cat.name.lower() == token:
+                if cat.name == w and w != "anime":
                     return cat.name
 
-        # 2. Exact match with full cleaned answer
-        for cat in categories:
-            if cat.name.lower() == clean_answer:
-                return cat.name
-
-        # 3. Substring match
-        for cat in categories:
-            if cat.name.lower() in clean_answer:
-                return cat.name
-
-        # 4. Fallback: match first token or uncategorized
-        for cat in categories:
-            if cat.name.lower() == "other":
-                return cat.name
-
-        return categories[0].name if categories else "uncategorized"
+        return matches[0] if matches else (categories[0].name if categories else "uncategorized")
 
 
 # ---------------------------------------------------------------------------

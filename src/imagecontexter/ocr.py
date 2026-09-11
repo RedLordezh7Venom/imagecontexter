@@ -3,6 +3,7 @@
 Checks for:
   - youtube: "ago", "subscribers", "views", "comment"
   - spotify: "spotify", "album", "playlist", "songs", "queue"
+  - coding: code syntax like "import", "def", "class", "return", "function", etc.
 
 Runs before the main VLM classifier. If a target keyword is found,
 it returns the category immediately in ~150-250ms, skipping VLM inference.
@@ -23,6 +24,26 @@ logger = logging.getLogger(__name__)
 # Keywords for YouTube and Spotify detection
 YOUTUBE_KEYWORDS: tuple[str, ...] = ("ago", "subscribers", "views", "comment")
 SPOTIFY_KEYWORDS: tuple[str, ...] = ("spotify", "album", "playlist", "songs", "queue")
+
+# Keywords for Coding syntax detection
+CODING_KEYWORDS: tuple[str, ...] = (
+    "import",
+    "from",
+    "def",
+    "class",
+    "return",
+    "function",
+    "const",
+    "let",
+    "var",
+    "console.log",
+    "public static",
+    "#include",
+    "select",
+    "where",
+    "printf",
+    "println",
+)
 
 
 class FastOCRClassifier:
@@ -60,8 +81,8 @@ class FastOCRClassifier:
             if not ocr_results:
                 return None
 
-            # Collect and lowercase all recognized text
-            extracted_text = " ".join([str(line[1]).lower() for line in ocr_results])
+            raw_lines = [str(line[1]) for line in ocr_results]
+            extracted_text = " ".join([l.lower() for l in raw_lines])
 
             # 1. Check YouTube keywords: "ago", "subscribers", "views", "comment"
             yt_matches = [
@@ -78,6 +99,19 @@ class FastOCRClassifier:
             ]
             if sp_matches:
                 return ("spotify", f"OCR matched: {', '.join(sp_matches)}")
+
+            # 3. Check Coding syntax
+            code_matches = []
+            for kw in CODING_KEYWORDS:
+                pattern = r"(?:^|\W)" + re.escape(kw) + r"(?:\W|$)"
+                if re.search(pattern, extracted_text, re.IGNORECASE):
+                    code_matches.append(kw)
+                elif kw in extracted_text:
+                    code_matches.append(kw)
+
+            unique_code_matches = list(set(code_matches))
+            if len(unique_code_matches) >= 2:
+                return ("coding", f"OCR matched code syntax: {', '.join(unique_code_matches)}")
 
             return None
 
