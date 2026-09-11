@@ -1,7 +1,11 @@
-"""Core image classification engine using SmolVLM-256M-Instruct GGUF via llama.cpp.
+"""Core image classification engine using Fast OCR + SmolVLM-256M-Instruct GGUF via llama.cpp.
 
-Hardware accelerated on NVIDIA GPUs (CUDA) for ultra-low inference latency (~0.5s - 1.0s).
-Hardcoded default categories: anime, game, movie, meme, coding.
+Workflow:
+  1. OCR Pre-check (ultra-fast, ~150-250ms):
+     - If keywords ("ago", "subscribers", "views", "comment") occur -> classified as "youtube"
+     - If keywords ("spotify", "album", "playlist", "songs", "queue") occur -> classified as "spotify"
+  2. If OCR does not match, runs SmolVLM-256M-Instruct GGUF on GPU for categories:
+     anime, game, movie, meme, coding.
 """
 
 from __future__ import annotations
@@ -20,6 +24,7 @@ from typing import Optional
 from PIL import Image
 
 from .config import DEFAULT_CATEGORIES, Category
+from .ocr import FastOCRClassifier
 
 logger = logging.getLogger(__name__)
 
@@ -81,7 +86,7 @@ class ClassificationResult:
 # ---------------------------------------------------------------------------
 
 class ImageClassifier:
-    """Classify images using SmolVLM-256M-Instruct GGUF on GPU."""
+    """Classify images using fast OCR pre-filtering + SmolVLM-256M-Instruct GGUF on GPU."""
 
     HF_REPO_ID = "ggml-org/SmolVLM-256M-Instruct-GGUF"
     MODEL_FILENAME = "SmolVLM-256M-Instruct-Q8_0.gguf"
@@ -93,7 +98,10 @@ class ImageClassifier:
         n_ctx: int = 2048,
         verbose: bool = False,
     ) -> None:
-        """Initialize and download SmolVLM GGUF model and vision projector."""
+        """Initialize Fast OCR and SmolVLM GGUF model on GPU."""
+        # Initialize Fast OCR engine
+        self.ocr = FastOCRClassifier()
+
         _setup_cuda_dlls()
 
         try:
@@ -138,11 +146,33 @@ class ImageClassifier:
         categories: Optional[list[Category]] = None,
         *,
         describe: bool = False,
+        use_ocr: bool = True,
     ) -> ClassificationResult:
-        """Classify a single image into defined categories."""
+        """Classify a single image into defined categories.
+
+        First runs OCR check for youtube and spotify. If not matched,
+        falls back to SmolVLM GGUF.
+        """
         if categories is None:
             categories = DEFAULT_CATEGORIES
 
+        # -------------------------------------------------------------------
+        # Step 1: Fast OCR Pre-filtering
+        # -------------------------------------------------------------------
+        if use_ocr:
+            ocr_result = self.ocr.check(image_path)
+            if ocr_result is not None:
+                matched_cat, detail = ocr_result
+                return ClassificationResult(
+                    image_path=str(image_path),
+                    category=matched_cat,
+                    description=detail,
+                    raw_answer=f"OCR:{detail}",
+                )
+
+        # -------------------------------------------------------------------
+        # Step 2: SmolVLM Vision Language Model (GPU)
+        # -------------------------------------------------------------------
         data_uri = self._image_to_data_uri(image_path)
 
         description: str | None = None
@@ -164,8 +194,12 @@ class ImageClassifier:
             )
             description = desc_resp["choices"][0]["message"]["content"].strip()
 
-        # Classification prompt
-        prompt = self._build_prompt(categories)
+        # VLM categories (filter out OCR-specific ones to keep prompt clean and focused)
+        vlm_categories = [c for c in categories if c.name not in ("youtube", "spotify")]
+        if not vlm_categories:
+            vlm_categories = categories
+
+        prompt = self._build_prompt(vlm_categories)
         messages = [
             {
                 "role": "user",
@@ -176,7 +210,7 @@ class ImageClassifier:
             }
         ]
 
-        # Fast inference with greedy decoding (low temperature)
+        # Fast inference with greedy decoding
         response = self.llm.create_chat_completion(
             messages=messages,
             max_tokens=15,
@@ -185,7 +219,7 @@ class ImageClassifier:
         )
 
         raw_answer = response["choices"][0]["message"]["content"].strip()
-        matched = self._match_category(raw_answer, categories)
+        matched = self._match_category(raw_answer, vlm_categories)
 
         return ClassificationResult(
             image_path=str(image_path),
@@ -201,7 +235,6 @@ class ImageClassifier:
         """Load and encode image to JPEG base64 Data URI."""
         with Image.open(image_path) as img:
             img = img.convert("RGB")
-            # Downscale if image is exceptionally large to reduce vision encoder latency
             max_dim = 1024
             if max(img.size) > max_dim:
                 img.thumbnail((max_dim, max_dim), Image.Resampling.LANCZOS)

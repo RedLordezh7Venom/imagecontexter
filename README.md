@@ -1,62 +1,60 @@
 # ImageContexter
 
-> Fast, GPU-accelerated local image categorizer using [SmolVLM-256M-Instruct-GGUF](https://huggingface.co/ggml-org/SmolVLM-256M-Instruct-GGUF). 100% free, runs completely offline on your NVIDIA GPU.
+> Fast, GPU-accelerated local image categorizer using **Fast OCR pre-filtering** + **[SmolVLM-256M-Instruct-GGUF](https://huggingface.co/ggml-org/SmolVLM-256M-Instruct-GGUF)** on NVIDIA GPUs. 100% free, runs completely offline.
 
-## Hardcoded Default Categories
+## Classification Pipeline
 
-ImageContexter automatically classifies images into 5 categories:
+### Step 1: Fast OCR Pre-filter (~150-250ms)
+Before loading or querying the VLM, images are quickly scanned via ONNX OCR for specific keyword patterns:
+- **`youtube`**: Triggered if any of: `"ago"`, `"subscribers"`, `"views"`, `"comment"` appear.
+- **`spotify`**: Triggered if any of: `"spotify"`, `"album"`, `"playlist"`, `"songs"`, `"queue"` appear.
 
+If a match is found, the image is immediately categorized without running the VLM, saving compute and time!
+
+### Step 2: GPU Vision Language Model (~0.5-0.8s)
+If the OCR keywords are not found, **SmolVLM-256M-Instruct Q8_0 GGUF** classifies the image on your GPU into:
 1. **`anime`** — Anime, manga illustrations, animated characters, 2D art
 2. **`game`** — Video games, gameplay screenshots, 3D graphics, gaming UI
 3. **`movie`** — Live-action films, TV series, cinematic stills, real actors
 4. **`meme`** — Memes, reaction images, humorous captioned posts
 5. **`coding`** — IDEs, code editors, terminal output, programming syntax
 
-## Features
-
-- **Blazing Fast GPU Inference** — Powered by `llama-cpp-python` with full CUDA offloading (`~0.5s - 0.9s` per image on RTX 3050).
-- **Ultra-lightweight VLM** — SmolVLM 256M Q8_0 GGUF + mmproj (~278 MB total).
-- **Zero Config Required** — Categories are hardcoded in the classifier; simply point to an image directory.
-- **Copy or Move Modes** — Organizes images cleanly into category folders.
-- **Dry-run Mode** — Preview without altering any files.
-- **Reports** — Automatic CSV and JSON output with classifications.
+---
 
 ## Quick Start
 
 ```bash
-# Basic usage (classifies into anime, game, movie, meme, coding)
+# Classify images in a directory
 imagecontexter classify ./my-photos
 
-# Dry run preview (does not touch files)
+# Dry run preview (no files moved/copied)
 imagecontexter classify ./my-photos --dry-run
 
-# Move files instead of copying (saves disk space)
+# Move files instead of copying
 imagecontexter classify ./my-photos --mode move
 
-# Custom output directory
-imagecontexter classify ./my-photos -o ./sorted
+# Disable OCR pre-filter (VLM only)
+imagecontexter classify ./my-photos --no-ocr
 
-# Recursive subfolder scan
+# Recursive folder scan
 imagecontexter classify ./my-photos -r
-
-# (Optional) Override with custom categories YAML
-imagecontexter classify ./my-photos -c custom.yaml
 ```
 
-## CLI Reference
+## CLI Options
 
 ```
 imagecontexter classify [OPTIONS] INPUT_DIR
 
 Options:
-  -c, --categories FILE     Optional path to a custom categories YAML file.
+  -c, --categories FILE     Optional custom categories YAML.
   -o, --output PATH         Output directory [default: <input_dir>_classified].
   --mode [copy|move]        Copy or move images into category folders.
-  --dry-run                 Show classification without touching any files.
-  --gpu-layers INTEGER      Number of layers to offload to GPU (-1 = all).
-  --describe                Generate concise image description in report.
+  --dry-run                 Show classifications without touching files.
+  --ocr / --no-ocr          Enable/disable Fast OCR pre-filtering [default: True].
+  --gpu-layers INTEGER      Layers to offload to GPU (-1 = all). [default: -1].
+  --describe                Generate concise descriptions in report.
   -r, --recursive           Scan input directory recursively.
-  --report [csv|json|both]  Report format written to output directory.
+  --report [csv|json|both]  Report format [default: both].
   --resume                  Skip images that appear in existing report.
   --help                    Show this message and exit.
 ```

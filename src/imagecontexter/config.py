@@ -1,13 +1,13 @@
 """Category configuration and defaults.
 
 Contains the default hardcoded classification categories:
+  - youtube: (Pre-filtered via fast OCR keywords: "ago", "subscribers", "views", "comment")
+  - spotify: (Pre-filtered via fast OCR keywords: "spotify", "album", "playlist", "songs", "queue")
   - anime: Anime, manga, animated Japanese art, anime characters
   - game: Video games, gaming screenshots, gameplay, game UI, 3D game models
   - movie: Live-action movies, TV shows, film stills, real actors, cinematic scenes
   - meme: Internet memes, humorous captioned photos, social media jokes, shitposts
   - coding: Code snippets, IDE/editor screenshots, terminal output, programming syntax
-
-Users can also optionally load custom categories from a YAML file.
 """
 
 from __future__ import annotations
@@ -32,8 +32,16 @@ class Category:
         return self.name
 
 
-# Default hardcoded categories as requested
+# Default hardcoded categories
 DEFAULT_CATEGORIES: list[Category] = [
+    Category(
+        name="youtube",
+        description="YouTube videos, YouTube UI screenshots, channel pages, video player screens",
+    ),
+    Category(
+        name="spotify",
+        description="Spotify music player, playlist screens, album art displays, audio tracks and lyrics",
+    ),
     Category(
         name="anime",
         description="Anime, manga illustrations, animated Japanese characters, 2D anime art and styles",

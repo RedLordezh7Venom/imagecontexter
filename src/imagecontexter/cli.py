@@ -1,13 +1,17 @@
 """Command-line interface for ImageContexter.
 
-Classifies images into: anime, game, movie, meme, coding using SmolVLM GGUF on GPU.
+Pipeline:
+  1. Fast OCR: Detects 'youtube' (ago, subscribers, views, comment) and
+     'spotify' (spotify, album, playlist, songs, queue).
+  2. GPU VLM: SmolVLM-256M-Instruct GGUF classifies remaining images into
+     anime, game, movie, meme, coding.
 
 Usage::
 
     imagecontexter classify ./photos
     imagecontexter classify ./photos --mode move
+    imagecontexter classify ./photos --no-ocr
     imagecontexter classify ./photos --dry-run
-    imagecontexter classify ./photos -c custom_categories.yaml
 """
 
 from __future__ import annotations
@@ -36,7 +40,7 @@ from .organizer import (
 @click.group()
 @click.version_option(package_name="imagecontexter")
 def main() -> None:
-    """ImageContexter — classify images into categories using SmolVLM GGUF on GPU."""
+    """ImageContexter — classify images using Fast OCR + SmolVLM GGUF on GPU."""
 
 
 # ---------------------------------------------------------------------------
@@ -74,6 +78,12 @@ def main() -> None:
     help="Show what would happen without touching any files.",
 )
 @click.option(
+    "--ocr/--no-ocr",
+    default=True,
+    show_default=True,
+    help="Enable/disable fast OCR pre-filter for YouTube and Spotify.",
+)
+@click.option(
     "--gpu-layers",
     type=int,
     default=-1,
@@ -108,13 +118,18 @@ def classify(
     output: Path | None,
     mode: str,
     dry_run: bool,
+    ocr: bool,
     gpu_layers: int,
     describe: bool,
     recursive: bool,
     report: str,
     resume: bool,
 ) -> None:
-    """Classify images in INPUT_DIR into category sub-folders (anime, game, movie, meme, coding)."""
+    """Classify images in INPUT_DIR.
+
+    Pre-filters via Fast OCR (youtube, spotify) and classifies remainder
+    using SmolVLM-256M GPU VLM (anime, game, movie, meme, coding).
+    """
 
     # -- load categories ----------------------------------------------------
     if categories is not None:
@@ -152,13 +167,13 @@ def classify(
     # -- load model ---------------------------------------------------------
     classifier: ImageClassifier | None = None
     if not dry_run:
-        click.echo("⚡ Loading SmolVLM-256M-Instruct GGUF on GPU for ultra-fast inference...")
+        click.echo("⚡ Initializing Fast OCR + SmolVLM-256M-Instruct GGUF on GPU...")
         try:
             classifier = ImageClassifier(n_gpu_layers=gpu_layers)
         except Exception as exc:
             click.secho(f"❌ Failed to load model: {exc}", fg="red", err=True)
             sys.exit(1)
-        click.secho("✅ SmolVLM GPU model ready!", fg="green")
+        click.secho("✅ Classifier ready!", fg="green")
 
     # -- classify -----------------------------------------------------------
     results: list[ClassificationResult] = []
@@ -181,6 +196,7 @@ def classify(
                         image_path,
                         config.categories,
                         describe=describe,
+                        use_ocr=ocr,
                     )
                     organize_file(result, output, mode=mode)
 
