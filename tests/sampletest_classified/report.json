@@ -1,0 +1,668 @@
+[
+  {
+    "image_path": "sampletest\\Screenshot (745).png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot (746).png",
+    "category": "coding",
+    "description": "OCR matched code syntax: from, def, where",
+    "raw_answer": "OCR:OCR matched code syntax: from, def, where"
+  },
+  {
+    "image_path": "sampletest\\Screenshot (747).png",
+    "category": "meme",
+    "description": null,
+    "raw_answer": "Internet meme."
+  },
+  {
+    "image_path": "sampletest\\Screenshot (748).png",
+    "category": "meme",
+    "description": null,
+    "raw_answer": "Internet meme."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 050652.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 055950.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 060649.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 062755.png",
+    "category": "meme",
+    "description": null,
+    "raw_answer": "Internet meme."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 065942.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 070201.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 074255.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: from, var",
+    "raw_answer": "OCR:OCR matched code syntax: from, var"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 091701.png",
+    "category": "coding",
+    "description": null,
+    "raw_answer": "Programming code."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 174600.png",
+    "category": "youtube",
+    "description": "OCR matched: ago, comment",
+    "raw_answer": "OCR:OCR matched: ago, comment"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 180142.png",
+    "category": "youtube",
+    "description": "OCR matched: ago, views",
+    "raw_answer": "OCR:OCR matched: ago, views"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 180200.png",
+    "category": "youtube",
+    "description": "OCR matched: ago, views",
+    "raw_answer": "OCR:OCR matched: ago, views"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 181807.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 182003.png",
+    "category": "meme",
+    "description": null,
+    "raw_answer": "Internet meme."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 182114.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: select, let",
+    "raw_answer": "OCR:OCR matched code syntax: select, let"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 182129.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 182332.png",
+    "category": "meme",
+    "description": null,
+    "raw_answer": "Internet meme."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 183553.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 183610.png",
+    "category": "meme",
+    "description": null,
+    "raw_answer": "Internet meme."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 230302.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: def, select",
+    "raw_answer": "OCR:OCR matched code syntax: def, select"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 234921.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: select, let, where",
+    "raw_answer": "OCR:OCR matched code syntax: select, let, where"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 235239.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: select, let, class",
+    "raw_answer": "OCR:OCR matched code syntax: select, let, class"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 235326.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: select, class",
+    "raw_answer": "OCR:OCR matched code syntax: select, class"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 235414.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-09 235449.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: select, class",
+    "raw_answer": "OCR:OCR matched code syntax: select, class"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 000424.png",
+    "category": "youtube",
+    "description": "OCR matched: subscribers",
+    "raw_answer": "OCR:OCR matched: subscribers"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 001057.png",
+    "category": "youtube",
+    "description": "OCR matched: ago, subscribers, views, comment",
+    "raw_answer": "OCR:OCR matched: ago, subscribers, views, comment"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 003227.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 003336.png",
+    "category": "coding",
+    "description": null,
+    "raw_answer": "Programming code."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 003517.png",
+    "category": "meme",
+    "description": null,
+    "raw_answer": "Internet meme."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 003555.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 003648.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 003744.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 003904.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 004025.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 004124.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: from, let",
+    "raw_answer": "OCR:OCR matched code syntax: from, let"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 004249.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 004314.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 005347.png",
+    "category": "movie",
+    "description": null,
+    "raw_answer": "Live-action movie."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 005550.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 005716.png",
+    "category": "youtube",
+    "description": "OCR matched: subscribers",
+    "raw_answer": "OCR:OCR matched: subscribers"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 005848.png",
+    "category": "youtube",
+    "description": "OCR matched: ago",
+    "raw_answer": "OCR:OCR matched: ago"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 010633.png",
+    "category": "youtube",
+    "description": "OCR matched: ago, views",
+    "raw_answer": "OCR:OCR matched: ago, views"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 011139.png",
+    "category": "meme",
+    "description": null,
+    "raw_answer": "Internet meme."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 011413.png",
+    "category": "meme",
+    "description": null,
+    "raw_answer": "Internet meme."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 011742.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 012425.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: from, let, def",
+    "raw_answer": "OCR:OCR matched code syntax: from, let, def"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 012508.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: where, select, function",
+    "raw_answer": "OCR:OCR matched code syntax: where, select, function"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 013253.png",
+    "category": "youtube",
+    "description": "OCR matched: ago",
+    "raw_answer": "OCR:OCR matched: ago"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 013855.png",
+    "category": "youtube",
+    "description": "OCR matched: ago, views",
+    "raw_answer": "OCR:OCR matched: ago, views"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 013913.png",
+    "category": "youtube",
+    "description": "OCR matched: ago, views",
+    "raw_answer": "OCR:OCR matched: ago, views"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 014245.png",
+    "category": "youtube",
+    "description": "OCR matched: ago, subscribers",
+    "raw_answer": "OCR:OCR matched: ago, subscribers"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 020852.png",
+    "category": "youtube",
+    "description": "OCR matched: ago",
+    "raw_answer": "OCR:OCR matched: ago"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 021223.png",
+    "category": "meme",
+    "description": null,
+    "raw_answer": "Internet meme."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 022448.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 023524.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 031405.png",
+    "category": "youtube",
+    "description": "OCR matched: views",
+    "raw_answer": "OCR:OCR matched: views"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 031416.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 031425.png",
+    "category": "spotify",
+    "description": "OCR matched: queue",
+    "raw_answer": "OCR:OCR matched: queue"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 031435.png",
+    "category": "youtube",
+    "description": "OCR matched: views",
+    "raw_answer": "OCR:OCR matched: views"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 031439.png",
+    "category": "meme",
+    "description": null,
+    "raw_answer": "Internet meme."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 032152.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 032202.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 035116.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 044229.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 061300.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 064544.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 064723.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 065750.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 071944.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 073147.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 073434.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 084833.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 085205.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 085228.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 085611.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 085646.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 090038.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 090309.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 090531.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 090539.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 090545.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 090638.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 091249.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 174450.png",
+    "category": "youtube",
+    "description": "OCR matched: ago, views",
+    "raw_answer": "OCR:OCR matched: ago, views"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 183904.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: var, where",
+    "raw_answer": "OCR:OCR matched code syntax: var, where"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 194521.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 195307.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: from, var",
+    "raw_answer": "OCR:OCR matched code syntax: from, var"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 200214.png",
+    "category": "youtube",
+    "description": "OCR matched: ago",
+    "raw_answer": "OCR:OCR matched: ago"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-10 212349.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 124057.png",
+    "category": "youtube",
+    "description": "OCR matched: ago, subscribers, views, comment",
+    "raw_answer": "OCR:OCR matched: ago, subscribers, views, comment"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 145827.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 150155.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 151433.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 152820.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 154724.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 154733.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 222308.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "Video game."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 222311.png",
+    "category": "game",
+    "description": null,
+    "raw_answer": "VLM: video game verified"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 231142.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: var, function, import",
+    "raw_answer": "OCR:OCR matched code syntax: var, function, import"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 231723.png",
+    "category": "meme",
+    "description": null,
+    "raw_answer": "Internet meme."
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 233336.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: from, let, class",
+    "raw_answer": "OCR:OCR matched code syntax: from, let, class"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 233346.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: def, let, class",
+    "raw_answer": "OCR:OCR matched code syntax: def, let, class"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 233531.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: where, from, let, import",
+    "raw_answer": "OCR:OCR matched code syntax: where, from, let, import"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 233725.png",
+    "category": "coding",
+    "description": "OCR matched code syntax: select, let, class",
+    "raw_answer": "OCR:OCR matched code syntax: select, let, class"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 234711.png",
+    "category": "spotify",
+    "description": "OCR matched: spotify",
+    "raw_answer": "OCR:OCR matched: spotify"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-11 235402.png",
+    "category": "youtube",
+    "description": "OCR matched: ago",
+    "raw_answer": "OCR:OCR matched: ago"
+  },
+  {
+    "image_path": "sampletest\\Screenshot 2026-09-12 001225.png",
+    "category": "youtube",
+    "description": "OCR matched: ago, views, comment",
+    "raw_answer": "OCR:OCR matched: ago, views, comment"
+  }
+]
