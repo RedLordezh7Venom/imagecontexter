@@ -8,14 +8,33 @@ build/
 *.egg
 .venv/
 venv/
+
 # OS generated files
 .DS_Store
 Thumbs.db
 desktop.ini
 ehthumbs.db
+
 # Model weights (downloaded at runtime)
 *.bin
 *.safetensors
 *.onnx
 *.gguf
 models/
+
+# Image files (do not commit user images)
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.tiff
+*.tif
+*.webp
+*.gif
+*.svg
+*.ico
+*.raw
+*.cr2
+*.nef
+*.heic
+*.heif
